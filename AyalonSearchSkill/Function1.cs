@@ -225,9 +225,9 @@ namespace AyalonSkill
 
         private async static Task<OutputRecord.OutputRecordData> AddEnrichedMetadata(AyalonResponse ayalonResponse, string text)
         {
-            List<string> entityTypes = new List<string>();
-            List<string> concepts = new List<string>();
-            List<string> relations = new List<string>();
+            HashSet<string> entityTypes = new HashSet<string>();
+            HashSet<string> concepts = new HashSet<string>();
+            HashSet<string> relations = new HashSet<string>();
             int age = 0;
 
             if (ayalonResponse.Entities  != null)
