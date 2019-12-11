@@ -12,7 +12,7 @@
             "type": "process",
             "problemMatcher": "$msCompile",
             "options": {
-                "cwd": "${workspaceFolder}/BingSearchSkill"
+                "cwd": "${workspaceFolder}/AyalonSearchSkill"
             }
         },
         {
@@ -31,7 +31,7 @@
             },
             "problemMatcher": "$msCompile",
             "options": {
-                "cwd": "${workspaceFolder}/BingSearchSkill"
+                "cwd": "${workspaceFolder}/AyalonSearchSkill"
             }
         },
         {
@@ -47,7 +47,7 @@
             "type": "process",
             "problemMatcher": "$msCompile",
             "options": {
-                "cwd": "${workspaceFolder}/BingSearchSkill"
+                "cwd": "${workspaceFolder}/AyalonSearchSkill"
             }
         },
         {
@@ -64,14 +64,14 @@
             "dependsOn": "clean release",
             "problemMatcher": "$msCompile",
             "options": {
-                "cwd": "${workspaceFolder}/BingSearchSkill"
+                "cwd": "${workspaceFolder}/AyalonSearchSkill"
             }
         },
         {
             "type": "func",
             "dependsOn": "build",
             "options": {
-                "cwd": "${workspaceFolder}/BingSearchSkill/bin/Debug/netcoreapp2.1"
+                "cwd": "${workspaceFolder}/AyalonSearchSkill/bin/Debug/netcoreapp2.1"
             },
             "command": "host start",
             "isBackground": true,

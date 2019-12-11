@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingSearchSkill", "BingSearchSkill\BingSearchSkill.csproj", "{D40BB6B0-5E29-4E2C-8B02-D15DB9D57E78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AyalonSearchSkill", "AyalonSearchSkill\AyalonSearchSkill.csproj", "{D40BB6B0-5E29-4E2C-8B02-D15DB9D57E78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
