@@ -23,6 +23,12 @@
             font-weight: bold;
             background-color: #ffed00;
         }
+
+        .highlightResult {
+            font-size: 13px;
+            border-radius: 9px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +64,10 @@
                                 <div id="ageFacet">
                                 </div>
                             </li>
-                            
+                            <li>
+                                <div id="genderFacet">
+                                </div>
+                            </li>                            
                             <li>
                                 <div id="entityTypesFacet">
                                 </div>
@@ -118,8 +127,7 @@
         }
     });
     
-    const resultTemplate = `<div class="col-xs-12 col-sm-9 col-md-9"><h4>{{metadata_storage_name}}</h4><div class="resultDescription">{{{content}}}</div></div>`;
-    const highliteTemplate = `<div class="col-xs-12 col-sm-9 col-md-9"><h4>{{metadata_storage_name}}</h4><div class="resultDescription">{{@search.highlights.content[0]}}</div></div>`;
+    const resultTemplate = `<div class="col-xs-12 col-sm-9 col-md-9"><h4>{{metadata_storage_name}}</h4><div class="resultDescription">{{{content}}}</div><div class="highlightResult">{{{highlight}}}</div></div>`;
 
     // add a results view using the template defined above
     automagic.addResults("results", { count: true }, resultTemplate);
@@ -137,14 +145,13 @@
 
     var resultProcessor = function(results) {
         return results.map(function (result) {
-            // result.content = result.hasOwnProperty("@search.highlights") ? result["@search.highlights"].content[0] :result.content;
+            result.highlight = result.hasOwnProperty("@search.highlights") ? result["@search.highlights"].content[0] : undefined;
             return result;
         });
     }
 
     automagic.store.setSuggestionsProcessor(suggestionsProcessor);
     automagic.store.setResultsProcessor(resultProcessor);
-
     var suggestionsTemplate = `{{{searchText}}}`;
 
     // Add a search box that uses suggester "sgst1", grabbing some additional fields to display during suggestions. Use the template defined above
@@ -158,6 +165,7 @@
         suggestionsTemplate);
     
    automagic.addRangeFacet("ageFacet", "age", "number", 0, 120);
+   automagic.addCheckboxFacet("genderFacet", "gender", "collection");
    automagic.addCheckboxFacet("entityTypesFacet", "entityTypes", "collection");
    automagic.addCheckboxFacet("conceptsFacet", "concepts", "collection");
    automagic.addCheckboxFacet("relationsFacet", "relations", "collection");

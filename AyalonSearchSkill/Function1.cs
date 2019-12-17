@@ -25,6 +25,8 @@ namespace AyalonSkill
         // static readonly string bingApiEndpoint = "https://api.cognitive.microsoft.com/bing/v7.0/entities/";
         static readonly string ayalonEndpoint = "http://localhost:5000";
         static readonly string textToAgeEndpoint = "https://ariesearchutils.azurewebsites.net/api/TextToAge?code=pjqPR4X3Z2A1WCtduxp384Fg8Ys1kK7KFBbHorcAER4xlD3VdSQczA%3D%3D";
+        static readonly string textToGenderEndpoint = "https://ariesearchutils.azurewebsites.net/api/TextToGender?code=Es8kzuteVlxw47tE13OOYcXbHaKl497cGZnA6RhCoKF4PJjQSJhhTA==";
+
         #endregion
 
         #region Class used to deserialize the request
@@ -64,7 +66,10 @@ namespace AyalonSkill
                 public string[] concepts { get; set; }
                 public string[] relations { get; set; }
                 public int age { get; set; }
+                public string[] gender { get; set; }
+
             }
+
 
             public class OutputRecordMessage
             {
@@ -117,6 +122,11 @@ namespace AyalonSkill
         {
             public int Age { get; set; }
         }
+        public class TextToGenderResponse
+        {
+            public string Gender { get; set; }
+        }
+
         #endregion
 
         #region The Azure Function definition
@@ -228,6 +238,8 @@ namespace AyalonSkill
             HashSet<string> entityTypes = new HashSet<string>();
             HashSet<string> concepts = new HashSet<string>();
             HashSet<string> relations = new HashSet<string>();
+            HashSet<string> gender = new HashSet<string>();
+
             int age = 0;
 
             if (ayalonResponse.Entities  != null)
@@ -239,6 +251,13 @@ namespace AyalonSkill
                     {
                         string ageText = text.Substring(entity.StartPosition, entity.EndPosition - entity.StartPosition);
                         age = (await ResolveAgeEntity(ageText)).Age;
+                    }
+                    if (entity.EntityType == "GENDER") 
+                    {   
+                        string genderText = text.Substring(entity.StartPosition, entity.EndPosition - entity.StartPosition);
+                        if (genderText.Length > 0) {
+                            gender.Add((await ResolveGenderEntity(genderText)).Gender);
+                        }
                     }
                     if (entity.Linking != null)
                     {
@@ -266,9 +285,30 @@ namespace AyalonSkill
                 entityTypes = entityTypes.ToArray(),
                 concepts = concepts.ToArray(),
                 relations = relations.ToArray(),
-                age = age
+                age = age,
+                gender = gender.ToArray()
             };
             return rootObject;
+        }
+
+        private async static Task<TextToGenderResponse> ResolveGenderEntity(string genderText)
+        {
+            using (var client = new HttpClient())
+            using (var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(textToGenderEndpoint + "&gender=" + genderText)
+            })
+            {
+                HttpResponseMessage response = await client.SendAsync(request);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK) {
+                    string responseBody = await response?.Content?.ReadAsStringAsync();
+                    var genderResult = JsonConvert.DeserializeObject<TextToGenderResponse>(responseBody);
+                    return genderResult;
+                }
+                
+            }
+            return new TextToGenderResponse();
         }
 
         private async static Task<TextToAgeResponse> ResolveAgeEntity(string ageText)  {
